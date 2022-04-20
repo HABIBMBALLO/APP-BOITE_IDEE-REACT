@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Carte from './Carte'
 import axios from "axios";
 import { useRecoilState } from 'recoil';
-import { suggestions, metrique } from "../atoms/suggestions";
+import { suggestions, metrique } from "./atoms/suggestions";
 
 const ListeCarte = () => {
     const [data, setData] = useRecoilState(suggestions);
