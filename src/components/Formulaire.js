@@ -1,61 +1,76 @@
-// import React from 'react'
-import React , { useState } from "react"
+import { useState } from "react";
+import axios from "axios";
+
 const Formulaire = (props) => {
-
-    const handLechange = (e) => {
-    setContenueSaisie(e.target.value);
-    
     const longueurMax = 130;
-    const [contenuSaisie, setContenueSaisie] = useState("");
-    
-}
-  return (
-      <h1>hello</h1>
-    // <form>
-    //     <div className="mb-3">
-    //         <label forHtml="titre" className="form-label">Titre</label>
-    //         <input
-    //             type="text"
-    //             className="form-control"
-    //             id="titre"
-    //             name="titre"
-    //             placeholder="Ex : Brief......"
-    //             aria-describedby="titreHelp"
+    const [contenuSaisi, setContenuSaisi] = useState("");
+    const [reste, setReste] = useState(longueurMax);
+    const [titre, setTitre] = useState("");
 
-    //         />
-    //         <div id="titreHelp" className="form-text">
-    //             Merci de donner un titre clair pourla
-    //             catégorisation
-    //         </div>
-    //     </div>
-    //     <div className="mb-3">
-    //         <label forHtml="suggestion" className="form-label"
-    //             >Suggestion</label
-    //         >
-    //         <textarea
-    //             class="form-control"
-    //             id="suggestion"
-    //             name="suggestion"
-    //             rows="3"
-    //             onChange={handLechange}
-    //         ></textarea>
-    //         <p id="limite-text">
-    //             const contenuSaisie {contenuSaisie.length}/130
-    //             Contenu saisi
-    //             <span id="text-progress">00 </span> / 130
-    //         </p>
-    //         <p id="text-restant">il vous reste {contenuSaisie}</p>
-    //     </div>
-    //     <button
-    //         type="submit"
-    //         id="btn-suggestion"
-    //         className="btn btn-danger float-end"
-    //         style="background-color: #ce0033"
-    //     >
-    //         Envoyer
-    //     </button>
-    // </form>
-  );
+    const handleChangeDescription = (e) => {
+        setContenuSaisi(e.target.value);
+        setReste(longueurMax - contenuSaisi.length);
+    }
+
+    const handleChangeTitre = (e) => {
+        setTitre(e.target.value);
+    }
+
+    const handleSbmit = (e) => {
+        e.preventDefault();
+        axios.post("https://api-boite-idee.herokuapp.com/api/idee/", { titre: titre, description: contenuSaisi, statut: true }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+    }
+
+    return ( <
+        form onSubmit = { handleSbmit } >
+        <
+        div className = "mb-3" >
+        <
+        label htmlFor = "titre"
+        className = "form-label" > Titre < /label> <
+        input type = "text"
+        className = "form-control"
+        name = "titre"
+        placeholder = "Ex : Brief......"
+        aria - describedby = "titreHelp"
+        onChange = { handleChangeTitre }
+        /> <
+        div className = "form-text" >
+        Merci de donner un titre clair pourla catégorisation <
+        /div> <
+        /div> <
+        div className = "mb-3" >
+        <
+        label htmlFor = "suggestion"
+        className = "form-label" >
+        Suggestion < /label> <
+        textarea className = "form-control"
+        id = "suggestion"
+        name = "suggestion"
+        rows = "3"
+        onChange = { handleChangeDescription } >
+        < /textarea> <
+        p style = {
+            { color: (reste < 0) ? "red" : "green" } } >
+        Contenu saisi { contenuSaisi.length }
+        / 130 <
+        /p> <
+        p id = "text-restant" > Il vous reste { reste } < /p> <
+        /div> <
+        button type = "submit"
+        id = "btn-suggestion"
+        className = "btn btn-danger float-end"
+        style = {
+            { backgroundColor: "#ce0033" } } >
+        Envoyer <
+        /button> <
+        /form>
+    );
 }
 
 export default Formulaire;
